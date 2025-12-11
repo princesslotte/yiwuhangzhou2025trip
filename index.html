@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Yiwu & Hangzhou Planner</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brand: {
+                bg: '#f8e8c1',
+                text: '#594a40',
+                card: '#ffffff',
+                accent: '#8c735a' 
+              }
+            },
+            boxShadow: {
+              'journal': '4px 4px 0px 0px rgba(89, 74, 64, 0.1)',
+              'soft': '0 10px 40px -10px rgba(89, 74, 64, 0.15)',
+              'inner': 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.05)'
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      body {
+        background-color: #f8e8c1;
+        color: #594a40;
+        -webkit-tap-highlight-color: transparent;
+        background-image: radial-gradient(#8c735a 1.5px, transparent 1.5px);
+        background-size: 24px 24px;
+        background-attachment: fixed;
+        font-size: 16px;
+        line-height: 1.6;
+      }
+      .font-zh { font-family: "Microsoft JhengHei", "Microsoft YaHei", "Noto Sans TC", sans-serif; }
+      .font-ko { font-family: "SeoulNamsan", "SeoulHangang", "Noto Sans KR", sans-serif; }
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.2.1",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.1/",
+    "react/": "https://esm.sh/react@^19.2.1/",
+    "lucide-react": "https://esm.sh/lucide-react@^0.560.0",
+    "@google/genai": "https://esm.sh/@google/genai@^1.33.0",
+    "vite": "https://esm.sh/vite@^7.2.7",
+    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
