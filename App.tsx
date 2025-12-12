@@ -52,8 +52,18 @@ const FlightCard: React.FC<{ flights: FlightDetails[] }> = ({ flights }) => {
 const App: React.FC = () => {
   // State
   const [lang, setLang] = useState<Language>('zh');
-  // Initialize days state, we'll populate it via effect or lazy initializer
-  const [days, setDays] = useState<DayItinerary[]>([]);
+  
+  // Initialize days with data immediately (lazy init) to avoid white screen return null
+  const [days, setDays] = useState<DayItinerary[]>(() => {
+    try {
+      const storageKey = `yiwu-hangzhou-trip-v15-zh`;
+      const saved = localStorage.getItem(storageKey);
+      return saved ? JSON.parse(saved) : INITIAL_ITINERARY['zh'];
+    } catch {
+      return INITIAL_ITINERARY['zh'];
+    }
+  });
+
   const [activeDayId, setActiveDayId] = useState<string>('d1');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingEvent, setEditingEvent] = useState<TravelEvent | null>(null);
@@ -183,8 +193,7 @@ const App: React.FC = () => {
       ? FLIGHT_INFO[lang].inbound 
       : [];
   
-  // Guard for initial render
-  if (days.length === 0) return null;
+  if (!activeDay) return null;
 
   return (
     <div className={`min-h-screen flex justify-center ${lang === 'zh' ? 'font-zh' : 'font-ko'} text-brand-text relative`}>

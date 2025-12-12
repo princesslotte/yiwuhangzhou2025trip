@@ -2,7 +2,7 @@
   "name": "yiwu-hangzhou-planner",
   "private": true,
   "version": "1.0.0",
-  "homepage": "https://<YOUR_GITHUB_USERNAME>.github.io/yiwuhangzhou2025trip",
+  "homepage": "https://princesslotte.github.io/yiwuhangzhou2025trip",
   "type": "module",
   "scripts": {
     "dev": "vite --host",

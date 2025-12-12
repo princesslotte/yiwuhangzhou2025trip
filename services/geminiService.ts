@@ -1,8 +1,20 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { TravelEvent } from "../types";
 
+// Declare process to avoid TypeScript errors if types are missing
+declare const process: any;
+
 export const generateItinerarySuggestions = async (city: string, language: 'zh' | 'ko'): Promise<TravelEvent[]> => {
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  // Use process.env.API_KEY exclusively as per guidelines
+  const apiKey = process.env.API_KEY;
+  
+  if (!apiKey) {
+    console.error("Missing API Key. Please set API_KEY in environment variables.");
+    alert("API Key missing. Please check console.");
+    return [];
+  }
+
+  const ai = new GoogleGenAI({ apiKey });
   const promptText = `Create a 1-day travel itinerary for ${city}, China. 
   Language: ${language === 'zh' ? 'Traditional Chinese (Taiwan/Hong Kong usage)' : 'Korean'}.
   Include 4-5 items mixing sightseeing, food, and shopping (especially for Yiwu markets or Hangzhou West Lake).
