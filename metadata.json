@@ -1,4 +1,5 @@
 {
   "name": "yiwuhangzhou2025trip",
-  "description": "A smart, bilingual travel itinerary planner for Yiwu and Hangzhou with map integration and AI suggestions."
+  "description": "A smart, bilingual travel itinerary planner for Yiwu and Hangzhou with map integration and AI suggestions.",
+  "requestFramePermissions": []
 }
