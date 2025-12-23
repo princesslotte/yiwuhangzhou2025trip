@@ -11,7 +11,7 @@
     <!-- Vue.js 3 -->
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 
-    <!-- Google Fonts (Fallback for specific fonts) -->
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
 
     <!-- FontAwesome -->
@@ -26,7 +26,7 @@
             background-image: radial-gradient(rgb(222, 170, 110) 20%, transparent 20%); /* #deaa6e */
             background-position: 0 0, 10px 10px;
             background-size: 20px 20px;
-            background-attachment: fixed; /* 背景不滾動 */
+            background-attachment: fixed;
             -webkit-tap-highlight-color: transparent;
         }
 
@@ -50,27 +50,6 @@
             background-position: -10px 0;
         }
         
-        .ticket-dash {
-            border-top: 2px dashed #cbd5e1;
-        }
-
-        /* 鋸齒邊緣效果 */
-        .sawtooth {
-            background: #fff;
-            position: relative;
-        }
-        .sawtooth::after {
-            content: "";
-            position: absolute;
-            right: -6px;
-            top: 0;
-            width: 12px;
-            height: 100%;
-            background: radial-gradient(circle, transparent 30%, #fff 30%);
-            background-size: 10px 10px;
-            background-position: -5px 0;
-        }
-
         /* 模態框過渡 */
         .fade-enter-active, .fade-leave-active {
             transition: opacity 0.3s ease;
@@ -151,6 +130,7 @@
                     <div class="flex justify-between items-center mb-2">
                         <span class="font-bold text-lg text-[#594a40]">{{ flight.code }}</span>
                         <div class="flex-1 mx-4 border-b-2 border-dashed border-gray-300 relative top-1"></div>
+                        <span class="text-xs font-mono bg-gray-100 px-2 py-1 rounded">{{ flight.airline }}</span>
                     </div>
                     <div class="flex justify-between items-end">
                         <div class="text-center">
@@ -262,7 +242,7 @@
                     </div>
                 </div>
 
-                <!-- 圖片區域 (轉插) -->
+                <!-- 圖片區域 -->
                 <div class="mt-6 bg-white p-4 rounded-xl shadow">
                     <h3 class="font-bold mb-3">{{ currentLang === 'zh' ? '轉插/電壓參考' : '어댑터/전압 참고' }}</h3>
                     <div class="grid grid-cols-2 gap-2">
@@ -372,15 +352,9 @@
             const dates = ['12/30', '12/31', '01/01', '01/02', '01/03', '01/04'];
             
             // 模擬天氣數據
+            // Update: Day 4 (Index 3, 1/2) now shows Hangzhou
             const activeCity = computed(() => {
-                return currentDayIndex.value <= 3 ? 'yiw' : 'hgh'; // Day 1-4 Yiwu (index 0-3), Day 5-6 Hangzhou (actually index 3 is move day, logic simplify: 30,31,1 are Yiwu, 2 is move, 3,4 are Hangzhou)
-                // Date mapping:
-                // 0: 12/30 (Yiwu)
-                // 1: 12/31 (Yiwu)
-                // 2: 01/01 (Yiwu)
-                // 3: 01/02 (Move -> HGH)
-                // 4: 01/03 (HGH)
-                // 5: 01/04 (HGH)
+                return currentDayIndex.value <= 2 ? 'yiw' : 'hgh';
             });
 
             const weather = {
@@ -398,7 +372,6 @@
                 }
             };
 
-            // 文本數據
             const text = {
                 heading: { zh: '義烏杭州之旅', kr: '이우항주여행' },
                 flightOutbound: { zh: '12月30日 去程航班', kr: '12월 30일 출발 항공편' },
@@ -421,20 +394,20 @@
             const flights = {
                 outbound: {
                     zh: [
-                        { code: 'CX960', airline: 'Cathay', depTime: '12:05', arrTime: '14:30', depAirport: 'HKG', depTerminal: 'T1', arrAirport: 'HGH', arrTerminal: '' },
-                        { code: 'CZ3869', airline: 'China Southern', depTime: '12:10', arrTime: '14:10', depAirport: 'CAN', depTerminal: '', arrAirport: 'HGH', arrTerminal: '' }
+                        { code: 'CX960', airline: 'Cathay', depTime: '12:05', arrTime: '14:30', depAirport: 'HKG', depTerminal: 'T1', arrAirport: 'HGH', arrTerminal: 'T4' },
+                        { code: 'CZ3869', airline: 'China Southern', depTime: '12:10', arrTime: '14:10', depAirport: 'CAN', depTerminal: 'T2', arrAirport: 'HGH', arrTerminal: 'T4' }
                     ],
                     kr: [
-                        { code: 'OZ359', airline: 'Asiana', depTime: '12:05', arrTime: '13:45', depAirport: 'ICN', depTerminal: 'T1', arrAirport: 'HGH', arrTerminal: '' }
+                        { code: 'OZ359', airline: 'Asiana', depTime: '12:05', arrTime: '13:45', depAirport: 'ICN', depTerminal: 'T1', arrAirport: 'HGH', arrTerminal: 'T4' }
                     ]
                 },
                 inbound: {
                     zh: [
-                        { code: 'CX961', airline: 'Cathay', depTime: '15:45', arrTime: '18:30', depAirport: 'HGH', depTerminal: 'T4', arrAirport: 'HKG', arrTerminal: '' },
-                        { code: 'GJ8995', airline: 'Loong Air', depTime: '19:05', arrTime: '21:15', depAirport: 'HGH', depTerminal: '', arrAirport: 'CAN', arrTerminal: '' }
+                        { code: 'CX961', airline: 'Cathay', depTime: '15:45', arrTime: '18:30', depAirport: 'HGH', depTerminal: 'T4', arrAirport: 'HKG', arrTerminal: 'T1' },
+                        { code: 'GJ8995', airline: 'Loong Air', depTime: '19:05', arrTime: '21:15', depAirport: 'HGH', depTerminal: 'T3', arrAirport: 'CAN', arrTerminal: '' }
                     ],
                     kr: [
-                        { code: 'OZ359', airline: 'Asiana', depTime: '15:05', arrTime: '18:10', depAirport: 'HGH', depTerminal: '', arrAirport: 'ICN', arrTerminal: 'T1' } // Prompt says OZ359 again for return, usually OZ360, but using provided data.
+                        { code: 'OZ359', airline: 'Asiana', depTime: '15:05', arrTime: '18:10', depAirport: 'HGH', depTerminal: 'T4', arrAirport: 'ICN', arrTerminal: 'T1' }
                     ]
                 }
             };
@@ -484,7 +457,7 @@
                     // Day 1
                     [
                         { time: '16:00', title: '義烏雅悅酒店 Check-in', remarks: '地址: 滙港路599-1號, 義烏' },
-                        { time: '18:30-21:00', title: '晚餐 義烏宴．小宴', remarks: '' },
+                        { time: '18:30-21:00', title: '晚餐 義烏宴．小宴', remarks: '江东东路200号一楼' },
                         { time: '21:00-23:00', title: '賓王夜市 (三挺路夜市)', remarks: '提示: 晚間人非常的多，請注意不要走散，並且注意隨身貴重物品，以免丟失。' },
                         { time: '23:00', title: '回酒店', remarks: '' }
                     ],
@@ -496,7 +469,7 @@
                         { time: '11:30-13:00', title: '午餐', remarks: '義烏國際商貿城二區 韓國料理' },
                         { time: '13:00-16:00', title: '參觀義烏國際商貿城(福田市場)', remarks: '請參考義烏國際商貿城地圖' },
                         { time: '16:00-16:15', title: '集合地點等候', remarks: '' },
-                        { time: '17:00-21:00', title: '晚餐 佛堂．唐朝戲宴 (佛堂鎮)', remarks: '' },
+                        { time: '17:00-21:00', title: '晚餐 佛堂．唐朝戲宴 (佛堂鎮)', remarks: '佛堂镇蒲川水街8号一楼（游千年佛堂,品唐潮戏宴）' },
                         { time: '21:00-22:20', title: '佛堂老街', remarks: '跨年夜 有煙花晚會 時間於10點開始' },
                         { time: '22:30', title: '回酒店', remarks: '' }
                     ],
@@ -505,8 +478,8 @@
                         { time: '7:00-9:00', title: '雅悅酒店早餐', remarks: '' },
                         { time: '9:20', title: '酒店大堂集合', remarks: '' },
                         { time: '9:30-12:30', title: '前往橫店影視城', remarks: '' },
-                        { time: '12:30-13:30', title: '午餐 臨江閣．江景餐廳', remarks: '' },
-                        { time: '13:45-16:00', title: '參觀東陽中國木雕城', remarks: '' },
+                        { time: '12:30-13:30', title: '午餐 臨江閣．江景餐廳', remarks: '浙江省金华市东阳市横店镇明清西路38号' },
+                        { time: '13:45-16:00', title: '參觀東陽中國木雕城', remarks: '浙江省金华市东阳市世贸大道188号' },
                         { time: '16:00-19:00', title: '阿里亞娜中東餐廳', remarks: '' },
                         { time: '19:10-21:00', title: '華潤義烏天地商業街區間(自由活動)', remarks: '' },
                         { time: '21:00', title: '回酒店', remarks: '' }
@@ -537,14 +510,15 @@
                     [
                         { time: '6:30-10:00', title: '酒店早餐', remarks: '' },
                         { time: '11:00', title: '酒店大堂集合/退房', remarks: '退房時間為11點' },
-                        { time: '11:30', title: '前往蕭山國際機場', remarks: '第四航廈' }
+                        { time: '11:30', title: '錢塘江', remarks: '' },
+                        { time: '12:30', title: '前往蕭山國際機場', remarks: '第四航廈' }
                     ]
                 ],
                 kr: [
                     // Day 1
                     [
                         { time: '16:00', title: '야웨호텔 (Yiwu Yandoo Yayue Hotel) 체크인', remarks: '주소: No.599-1 Huigang Road, Yiwu' },
-                        { time: '18:30-21:00', title: '저녁 이우연회식당 (YIWUYAN.Xiaoyan)', remarks: '' },
+                        { time: '18:30-21:00', title: '저녁 이우연회식당 (YIWUYAN.Xiaoyan)', remarks: '江东东路200号一楼' },
                         { time: '21:00-23:00', title: '빈왕 야시장 (Binwang Night Market)', remarks: '주의사항: 저녁에는 사람이 아주 많습니다. 길을 잃지 않도록 주의하시고, 소지품 분실을 피하기 위해 귀중품을 잘 챙겨주시기 바랍니다.' },
                         { time: '23:00', title: '야웨호텔', remarks: '' }
                     ],
@@ -556,7 +530,7 @@
                         { time: '11:30-13:00', title: '점심', remarks: '이우국제시장 2동 한국요리' },
                         { time: '13:00-16:00', title: '이우국제시장 (푸톈 시장）구경', remarks: '이우국제시장지도 참고' },
                         { time: '16:00-16:15', title: '만나는 곳에서 집합', remarks: '' },
-                        { time: '17:00-21:00', title: '저녁 포당.당차오 시엔 (중식)', remarks: '' },
+                        { time: '17:00-21:00', title: '저녁 포당.당차오 시엔 (중식)', remarks: '佛堂镇蒲川水街8号一楼（游千年佛堂,品唐潮戏宴）' },
                         { time: '21:00-22:20', title: '포당옛날거리 (Fotang Old street)', remarks: '신년전야 밤에 불꽃놀이 행사 (10시부터 시작)' },
                         { time: '22:30', title: '야웨호텔', remarks: '' }
                     ],
@@ -565,8 +539,8 @@
                         { time: '7:00-9:00', title: '호텔 조식', remarks: '' },
                         { time: '9:20', title: '호텔로비서 집합', remarks: '' },
                         { time: '9:30-12:30', title: '흠덴 영화촬영소(Hengdian World Studios) 로 출발', remarks: '' },
-                        { time: '12:30-13:30', title: '점심 린장제．강변식당 (Linjiangge)', remarks: '' },
-                        { time: '13:45-16:00', title: '동양 나무조각박물관', remarks: '' },
+                        { time: '12:30-13:30', title: '점심 린장제．강변식당 (Linjiangge)', remarks: '浙江省金华市东阳市横店镇明清西路38号' },
+                        { time: '13:45-16:00', title: '동양 나무조각박물관', remarks: '浙江省金华市东阳市世贸大道188号' },
                         { time: '16:00-19:00', title: '아리아나중동식당 (ARIANA Restaurant)', remarks: '' },
                         { time: '19:10-21:00', title: '이우티엔디 (Yiwu Place) (자유시간)', remarks: '' },
                         { time: '21:00', title: '야웨호텔', remarks: '' }
@@ -597,7 +571,8 @@
                     [
                         { time: '6:30-10:00', title: '호텔조식', remarks: '' },
                         { time: '11:00', title: '호텔로비서 집합/체크아웃', remarks: '체크아웃 시간: 11시' },
-                        { time: '11:30', title: '항저우공항으로 출발', remarks: '제4여객터미널' }
+                        { time: '11:30', title: '첸탕강', remarks: '' },
+                        { time: '12:30', title: '항저우공항으로 출발', remarks: '제4여객터미널' }
                     ]
                 ]
             });
