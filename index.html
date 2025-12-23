@@ -43,13 +43,6 @@
             scrollbar-width: none;
         }
 
-        /* 擬真機票樣式 */
-        .ticket-edge {
-            background-image: radial-gradient(circle at 10px 50%, transparent 6px, #fff 7px);
-            background-size: 100% 100%;
-            background-position: -10px 0;
-        }
-        
         /* 模態框過渡 */
         .fade-enter-active, .fade-leave-active {
             transition: opacity 0.3s ease;
@@ -67,38 +60,56 @@
 </head>
 <body class="antialiased min-h-screen">
 
-<div id="app" :class="{'lang-kr': currentLang === 'kr'}" class="w-full max-w-md mx-auto min-h-screen relative flex flex-col bg-opacity-90 shadow-2xl">
+<div id="app" :class="{'lang-kr': currentLang === 'kr'}" class="w-full max-w-md mx-auto min-h-screen relative flex flex-col shadow-2xl">
     
-    <!-- 頂部標題與天氣 -->
-    <header class="sticky top-0 z-30 bg-[#f8e8c1]/95 backdrop-blur-sm px-4 py-4 shadow-sm border-b border-[#deaa6e]">
-        <div class="flex justify-between items-center mb-2">
-            <h1 class="text-xl font-bold">{{ text.heading[currentLang] }}</h1>
-            <button @click="toggleLang" class="px-3 py-1 bg-[#594a40] text-[#f8e8c1] rounded-full text-sm font-bold shadow-lg transform active:scale-95 transition">
-                {{ currentLang === 'zh' ? '한국어' : '繁體中文' }}
-            </button>
-        </div>
-        
-        <!-- 實時天氣 (模擬) -->
-        <div class="flex items-center gap-2 text-sm font-medium opacity-80">
-            <i class="fas fa-map-marker-alt text-red-500"></i>
-            <span>{{ weather[activeCity].name[currentLang] }}</span>
-            <span class="mx-1">|</span>
-            <i :class="weather[activeCity].icon" class="text-orange-500"></i>
-            <span>{{ weather[activeCity].temp }}°C</span>
-            <span>{{ weather[activeCity].desc[currentLang] }}</span>
+    <!-- 頂部標題 (Glass Tab Style) -->
+    <!-- Removed image, added glass effect wrapper -->
+    <header class="sticky top-0 z-30 pt-4 px-4 pb-1">
+        <div class="bg-white/80 backdrop-blur-md rounded-2xl shadow-lg p-4 border border-white/40">
+            <div class="flex justify-between items-center mb-2">
+                <h1 class="text-xl font-bold text-[#594a40]">{{ text.heading[currentLang] }}</h1>
+                <button @click="toggleLang" class="px-3 py-1 bg-[#594a40] text-[#f8e8c1] rounded-full text-xs font-bold shadow-md transform active:scale-95 transition">
+                    {{ currentLang === 'zh' ? '한국어' : '繁體中文' }}
+                </button>
+            </div>
+            
+            <!-- 實時天氣 -->
+            <div class="flex items-center gap-2 text-sm font-medium">
+                <i class="fas fa-map-marker-alt text-red-500"></i>
+                <span>{{ weather[activeCity].name[currentLang] }}</span>
+                <span class="mx-1 text-gray-400">|</span>
+                <i :class="weather[activeCity].icon" class="text-orange-500"></i>
+                <span>{{ weather[activeCity].temp }}°C</span>
+                <span>{{ weather[activeCity].desc[currentLang] }}</span>
+            </div>
         </div>
     </header>
 
     <!-- 主要內容滾動區 -->
-    <main class="flex-1 overflow-y-auto pb-24 px-4 pt-4">
+    <main class="flex-1 overflow-y-auto pb-24 px-4 pt-2">
         
-        <!-- 航班資訊 (只顯示在 Day 1 和 Day 6) -->
-        <div v-if="currentDayIndex === 0" class="mb-6 animate-fade-in">
-            <h2 class="text-lg font-bold mb-3 border-l-4 border-[#594a40] pl-2">{{ text.flightOutbound[currentLang] }}</h2>
-            <div v-for="(flight, idx) in flights.outbound[currentLang]" :key="idx" class="bg-white rounded-lg shadow-md mb-3 overflow-hidden relative">
+        <!-- 1. 日期導航 (Moved Above Flight Info) -->
+        <!-- Spacing 1.5 -->
+        <div class="flex overflow-x-auto no-scrollbar gap-1.5 mb-1.5 sticky top-0 z-20"> 
+            <button v-for="(date, index) in dates" :key="index"
+                @click="currentDayIndex = index"
+                :class="currentDayIndex === index ? 'bg-[#594a40] text-[#f8e8c1] scale-105 shadow-md' : 'bg-white/80 text-[#594a40]'"
+                class="flex-shrink-0 px-4 py-2 rounded-xl border border-[#594a40]/10 transition-all duration-200 flex flex-col items-center min-w-[70px] backdrop-blur-sm">
+                <span class="text-xs font-bold opacity-70">Day {{ index + 1 }}</span>
+                <span class="text-sm font-bold">{{ date }}</span>
+            </button>
+        </div>
+
+        <!-- 2. 航班資訊 (只顯示在 Day 1 和 Day 6) -->
+        <!-- Spacing 1.5 -->
+        <div v-if="currentDayIndex === 0" class="mb-1.5 animate-fade-in">
+            <div class="bg-[#594a40]/5 rounded-lg p-2 mb-1.5">
+                <h2 class="text-sm font-bold border-l-4 border-[#594a40] pl-2">{{ text.flightOutbound[currentLang] }}</h2>
+            </div>
+            <div v-for="(flight, idx) in flights.outbound[currentLang]" :key="idx" class="bg-white rounded-xl shadow-sm mb-1.5 overflow-hidden relative border border-[#deaa6e]/30">
                 <!-- 裝飾用鋸齒圓圈 -->
-                <div class="absolute top-1/2 -left-3 w-6 h-6 bg-[#f8e8c1] rounded-full"></div>
-                <div class="absolute top-1/2 -right-3 w-6 h-6 bg-[#f8e8c1] rounded-full"></div>
+                <div class="absolute top-1/2 -left-2 w-4 h-4 bg-[#f8e8c1] rounded-full"></div>
+                <div class="absolute top-1/2 -right-2 w-4 h-4 bg-[#f8e8c1] rounded-full"></div>
                 
                 <div class="p-4">
                     <div class="flex justify-between items-center mb-2">
@@ -111,7 +122,7 @@
                             <div class="text-2xl font-bold leading-none">{{ flight.depTime }}</div>
                             <div class="text-xs text-gray-500 mt-1 font-bold">{{ flight.depAirport }} <span v-if="flight.depTerminal" class="bg-[#594a40] text-white px-1 rounded text-[10px]">{{ flight.depTerminal }}</span></div>
                         </div>
-                        <i class="fas fa-plane text-gray-300 mb-2 transform rotate-90"></i>
+                        <i class="fas fa-plane text-gray-300 mb-2 text-xl"></i>
                         <div class="text-center">
                             <div class="text-2xl font-bold leading-none">{{ flight.arrTime }}</div>
                             <div class="text-xs text-gray-500 mt-1 font-bold">{{ flight.arrAirport }} <span v-if="flight.arrTerminal" class="bg-[#594a40] text-white px-1 rounded text-[10px]">{{ flight.arrTerminal }}</span></div>
@@ -121,11 +132,13 @@
             </div>
         </div>
 
-        <div v-if="currentDayIndex === 5" class="mb-6 animate-fade-in">
-            <h2 class="text-lg font-bold mb-3 border-l-4 border-[#594a40] pl-2">{{ text.flightInbound[currentLang] }}</h2>
-            <div v-for="(flight, idx) in flights.inbound[currentLang]" :key="idx" class="bg-white rounded-lg shadow-md mb-3 overflow-hidden relative">
-                 <div class="absolute top-1/2 -left-3 w-6 h-6 bg-[#f8e8c1] rounded-full"></div>
-                <div class="absolute top-1/2 -right-3 w-6 h-6 bg-[#f8e8c1] rounded-full"></div>
+        <div v-if="currentDayIndex === 5" class="mb-1.5 animate-fade-in">
+             <div class="bg-[#594a40]/5 rounded-lg p-2 mb-1.5">
+                <h2 class="text-sm font-bold border-l-4 border-[#594a40] pl-2">{{ text.flightInbound[currentLang] }}</h2>
+            </div>
+            <div v-for="(flight, idx) in flights.inbound[currentLang]" :key="idx" class="bg-white rounded-xl shadow-sm mb-1.5 overflow-hidden relative border border-[#deaa6e]/30">
+                 <div class="absolute top-1/2 -left-2 w-4 h-4 bg-[#f8e8c1] rounded-full"></div>
+                <div class="absolute top-1/2 -right-2 w-4 h-4 bg-[#f8e8c1] rounded-full"></div>
                 <div class="p-4">
                     <div class="flex justify-between items-center mb-2">
                         <span class="font-bold text-lg text-[#594a40]">{{ flight.code }}</span>
@@ -137,7 +150,7 @@
                             <div class="text-2xl font-bold leading-none">{{ flight.depTime }}</div>
                             <div class="text-xs text-gray-500 mt-1 font-bold">{{ flight.depAirport }} <span v-if="flight.depTerminal" class="bg-[#594a40] text-white px-1 rounded text-[10px]">{{ flight.depTerminal }}</span></div>
                         </div>
-                        <i class="fas fa-plane text-gray-300 mb-2 transform rotate-90"></i>
+                        <i class="fas fa-plane text-gray-300 mb-2 text-xl"></i>
                         <div class="text-center">
                             <div class="text-2xl font-bold leading-none">{{ flight.arrTime }}</div>
                             <div class="text-xs text-gray-500 mt-1 font-bold">{{ flight.arrAirport }} <span v-if="flight.arrTerminal" class="bg-[#594a40] text-white px-1 rounded text-[10px]">{{ flight.arrTerminal }}</span></div>
@@ -147,21 +160,9 @@
             </div>
         </div>
 
-        <!-- 日期導航 -->
-        <div class="flex overflow-x-auto no-scrollbar gap-2 mb-4 sticky top-0 pt-2 pb-2 z-20">
-            <button v-for="(date, index) in dates" :key="index"
-                @click="currentDayIndex = index"
-                :class="currentDayIndex === index ? 'bg-[#594a40] text-[#f8e8c1] scale-105' : 'bg-white/60 text-[#594a40]'"
-                class="flex-shrink-0 px-4 py-2 rounded-xl shadow-sm border border-[#594a40]/20 transition-all duration-200 flex flex-col items-center min-w-[70px]">
-                <span class="text-xs font-bold opacity-70">Day {{ index + 1 }}</span>
-                <span class="text-sm font-bold">{{ date }}</span>
-            </button>
-        </div>
-
-        <!-- 行程列表 -->
-        <div class="space-y-4">
+        <!-- 3. 行程列表 -->
+        <div class="space-y-3">
             <div v-for="(item, idx) in currentItinerary" :key="idx" class="group bg-white rounded-xl p-4 shadow-sm border-l-4 border-[#deaa6e] relative transition-transform active:scale-[0.99]">
-                <!-- 編輯/刪除按鈕 (僅顯示圖示) -->
                 <div class="absolute top-2 right-2 flex gap-2 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
                     <button @click.stop="editItem(idx)" class="text-blue-400 hover:text-blue-600"><i class="fas fa-pen"></i></button>
                     <button @click.stop="deleteItem(idx)" class="text-red-400 hover:text-red-600"><i class="fas fa-trash"></i></button>
@@ -170,7 +171,6 @@
                 <div class="flex items-start gap-3" @click="editItem(idx)">
                     <div class="flex flex-col items-center min-w-[60px]">
                         <span class="text-lg font-bold text-[#594a40]">{{ item.time }}</span>
-                        <!-- 裝飾線 -->
                         <div v-if="idx !== currentItinerary.length -1" class="h-full w-px bg-[#deaa6e] mt-2 border-dashed border-l border-[#deaa6e]"></div>
                     </div>
                     <div class="flex-1 pb-2">
@@ -182,8 +182,7 @@
                 </div>
             </div>
             
-            <!-- 新增行程按鈕 -->
-            <button @click="addNewItem" class="w-full py-3 border-2 border-dashed border-[#594a40]/30 rounded-xl text-[#594a40]/60 hover:bg-[#594a40]/5 transition font-bold">
+            <button @click="addNewItem" class="w-full py-3 border-2 border-dashed border-[#594a40]/30 rounded-xl text-[#594a40]/60 hover:bg-[#594a40]/5 transition font-bold backdrop-blur-sm">
                 <i class="fas fa-plus mr-2"></i> {{ currentLang === 'zh' ? '新增行程' : '일정 추가' }}
             </button>
         </div>
@@ -351,9 +350,9 @@
 
             const dates = ['12/30', '12/31', '01/01', '01/02', '01/03', '01/04'];
             
-            // 模擬天氣數據
-            // Update: Day 4 (Index 3, 1/2) now shows Hangzhou
             const activeCity = computed(() => {
+                // Day 1-3 (Index 0-2): Yiwu
+                // Day 4-6 (Index 3-5): Hangzhou
                 return currentDayIndex.value <= 2 ? 'yiw' : 'hgh';
             });
 
@@ -398,7 +397,7 @@
                         { code: 'CZ3869', airline: 'China Southern', depTime: '12:10', arrTime: '14:10', depAirport: 'CAN', depTerminal: 'T2', arrAirport: 'HGH', arrTerminal: 'T4' }
                     ],
                     kr: [
-                        { code: 'OZ359', airline: 'Asiana', depTime: '12:05', arrTime: '13:45', depAirport: 'ICN', depTerminal: 'T1', arrAirport: 'HGH', arrTerminal: 'T4' }
+                        { code: 'OZ359', airline: 'Asiana', depTime: '12:30', arrTime: '13:45', depAirport: 'ICN', depTerminal: 'T1', arrAirport: 'HGH', arrTerminal: 'T4' }
                     ]
                 },
                 inbound: {
@@ -407,7 +406,7 @@
                         { code: 'GJ8995', airline: 'Loong Air', depTime: '19:05', arrTime: '21:15', depAirport: 'HGH', depTerminal: 'T3', arrAirport: 'CAN', arrTerminal: '' }
                     ],
                     kr: [
-                        { code: 'OZ359', airline: 'Asiana', depTime: '15:05', arrTime: '18:10', depAirport: 'HGH', depTerminal: 'T4', arrAirport: 'ICN', arrTerminal: 'T1' }
+                        { code: 'OZ360', airline: 'Asiana', depTime: '15:05', arrTime: '18:10', depAirport: 'HGH', depTerminal: 'T4', arrAirport: 'ICN', arrTerminal: 'T1' }
                     ]
                 }
             };
@@ -451,7 +450,6 @@
                 ]
             });
 
-            // 行程數據初始化 (Reactive)
             const itineraryData = reactive({
                 zh: [
                     // Day 1
@@ -581,7 +579,6 @@
                 return itineraryData[currentLang.value][currentDayIndex.value];
             });
 
-            // 編輯功能
             const editModal = reactive({
                 show: false,
                 isNew: false,
@@ -619,7 +616,6 @@
                 editModal.show = false;
             };
 
-            // 匯率計算
             const calcToKrw = () => {
                 if(cnyAmount.value) {
                     krwAmount.value = (cnyAmount.value * rate).toFixed(0);
